@@ -24,6 +24,7 @@ import SteelLayer from './SteelLayer'
 import TankHelmet from './TankHelmet'
 import { Tank } from './tanks'
 import TextLayer from './TextLayer'
+import { WSPlayerState } from '../types/WSTransfer'
 
 export class BattleFieldContent extends React.PureComponent<Partial<State & Point>> {
   render() {
@@ -83,6 +84,32 @@ export class BattleFieldContent extends React.PureComponent<Partial<State & Poin
 }
 
 class BattleFieldScene extends React.PureComponent<State> {
+
+  public componentDidMount() {
+    const ws = new WebSocket('ws://192.168.2.201:8382');
+    
+    let counter = 0;
+    setInterval(() => {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+          const value = -(counter++ * 0.1);
+          const data = {
+              timestamp: Date.now(),
+              value
+          };
+          ws.send(JSON.stringify(data))
+      }
+  }, 5000);
+
+    ws.onmessage = (evt: MessageEvent) => {
+        const data: WSPlayerState = JSON.parse(evt.data);
+        console.log("received", data);
+    };
+
+    ws.onerror = function(error) {
+      alert(`[error] ${error}`);
+    };
+  }
+
   render() {
     const { game, texts } = this.props
 

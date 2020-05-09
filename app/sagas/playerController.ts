@@ -28,9 +28,9 @@ export default function* playerController(tankId: TankId, config: PlayerConfig) 
   }
 
   // region function-definitions
-  function tryPush(direciton: Direction) {
-    if (!pressed.includes(direciton)) {
-      pressed.push(direciton)
+  function tryPush(direction: Direction) {
+    if (!pressed.includes(direction)) {
+      pressed.push(direction)
     }
   }
 
